@@ -5,8 +5,6 @@
 ```
 musicalsite-main/
 ├── backend/          # Backend API (deploy to Google Cloud Run)
-│   ├── config/
-│   ├── migrations/
 │   ├── server.js
 │   └── package.json
 ├── frontend/         # Frontend (deploy to Vercel)
@@ -30,11 +28,10 @@ cd ../frontend
 npm install
 ```
 
-### 2. Set Up Environment
+### 2. Set Up Environment (Optional)
 
-**Backend** (`backend/.env`):
+**Backend** (`backend/.env` - optional):
 ```env
-DATABASE_URL=postgresql://user:password@host/db?sslmode=require
 PORT=3000
 ALLOWED_ORIGIN=http://localhost:5173
 ```
@@ -45,14 +42,7 @@ VITE_API_URL=http://localhost:3000/api
 ```
 > Note: Not needed for local dev - Vite proxies `/api` automatically
 
-### 3. Run Database Migrations
-
-```bash
-cd backend
-npm run migrate
-```
-
-### 4. Start Servers
+### 3. Start Servers
 
 **Terminal 1:**
 ```bash
@@ -79,7 +69,7 @@ gcloud run deploy musical-site-backend \
   --platform managed \
   --region us-central1 \
   --allow-unauthenticated \
-  --set-env-vars DATABASE_URL="your-db-url",ALLOWED_ORIGIN="https://your-vercel-url.vercel.app"
+  --set-env-vars ALLOWED_ORIGIN="https://your-vercel-url.vercel.app"
 ```
 
 ### Frontend → Vercel
@@ -93,9 +83,8 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
 
 ## After Deployment
 
-1. Run migrations on production database
-2. Update CORS `ALLOWED_ORIGIN` in Cloud Run with your Vercel URL
-3. Set `VITE_API_URL` in Vercel environment variables
+1. Update CORS `ALLOWED_ORIGIN` in Cloud Run with your Vercel URL
+2. Set `VITE_API_URL` in Vercel environment variables
 
 ## Git Push
 

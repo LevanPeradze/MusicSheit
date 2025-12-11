@@ -4,26 +4,23 @@ Full-stack web application for a modern music school. Students can register, set
 
 ## Features
 
-- **Authentication**: Register/Login powered by PostgreSQL
+- **Authentication**: Register/Login functionality
 - **Interests Profile**: Users pick genres, bands, instruments, styles
 - **Dynamic Recommendations**: Courses are tagged with interests; page highlights which ones match the user
 - **Vibrant UI**: React + Vite frontend with animated cards and stateful feedback
-- **Comprehensive Backend**: Node.js/Express API, migrations, seed data, PostgreSQL via Neon
+- **Comprehensive Backend**: Node.js/Express API
 
 ## Tech Stack
 
 - **Frontend**: React 19 + Vite, React Router
 - **Backend**: Node.js 20 + Express
-- **Database**: PostgreSQL (Neon) accessed via `pg`
-- **Tooling**: npm scripts, `dotenv`, custom migration runner
+- **Tooling**: npm scripts, `dotenv`
 
 ## Project Structure
 
 ```
 musicalsite/
 ├── backend/           # Node.js/Express API
-│   ├── config/        # Database configuration
-│   ├── migrations/    # Database migrations
 │   ├── server.js      # Express server entry point
 │   └── package.json   # Backend dependencies
 ├── frontend/          # React + Vite application
@@ -39,7 +36,6 @@ musicalsite/
 ### Prerequisites
 
 - Node.js 20+
-- PostgreSQL database (Neon, Supabase, or local)
 - npm or yarn
 
 ### Installation
@@ -62,11 +58,10 @@ cd ../frontend
 npm install
 ```
 
-### Environment Variables
+### Environment Variables (Optional)
 
-**Backend** (`backend/.env`):
+**Backend** (`backend/.env` - optional):
 ```
-DATABASE_URL=postgresql://user:password@host/db?sslmode=require
 PORT=3000
 ALLOWED_ORIGIN=http://localhost:5173
 ```
@@ -77,16 +72,6 @@ VITE_API_URL=http://localhost:3000/api
 ```
 
 > Note: For local development, you don't need to set `VITE_API_URL` as Vite proxies `/api/*` to `http://localhost:3000` automatically.
-
-### Database Migrations
-
-Run migrations from the backend directory:
-```bash
-cd backend
-npm run migrate
-```
-
-This creates tables (`courses`, `users`, `interests`, `user_interests`, `course_interests`) and inserts seed data (courses, admin user, example interests, course-interest links).
 
 ### Development Servers
 

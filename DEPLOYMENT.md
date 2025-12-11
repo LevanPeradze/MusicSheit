@@ -7,8 +7,6 @@ This guide explains how to deploy the Musical School Website with the backend on
 ```
 musicalsite-main/
 ├── backend/           # Node.js/Express API
-│   ├── config/        # Database configuration
-│   ├── migrations/    # Database migrations
 │   ├── server.js      # Express server entry point
 │   ├── package.json   # Backend dependencies
 │   └── Dockerfile     # For Google Cloud Run
@@ -25,9 +23,8 @@ musicalsite-main/
 
 1. **Google Cloud Account** with billing enabled
 2. **Vercel Account** (free tier works)
-3. **PostgreSQL Database** (Neon, Supabase, or Google Cloud SQL)
-4. **Google Cloud SDK** (`gcloud`) installed locally (for backend deployment)
-5. **Node.js 20+** installed locally
+3. **Google Cloud SDK** (`gcloud`) installed locally (for backend deployment)
+4. **Node.js 20+** installed locally
 
 ## Backend Deployment (Google Cloud Run)
 
@@ -47,16 +44,12 @@ musicalsite-main/
 
 ### Step 2: Configure Environment Variables
 
-1. Create a `.env` file in the `backend/` directory:
-   ```env
-   DATABASE_URL=postgresql://user:password@host/db?sslmode=require
-   PORT=3000
-   ALLOWED_ORIGIN=https://your-frontend-url.vercel.app
-   ```
+For Google Cloud Run, you'll need to set environment variables in the Cloud Run service:
 
-   > **Note**: Replace `your-frontend-url.vercel.app` with your actual Vercel frontend URL (you'll get this after deploying the frontend).
+- `PORT=3000` (optional, Cloud Run sets this automatically)
+- `ALLOWED_ORIGIN=https://your-frontend-url.vercel.app` (set this after deploying frontend)
 
-2. For Google Cloud Run, you'll need to set these as environment variables in the Cloud Run service.
+> **Note**: Replace `your-frontend-url.vercel.app` with your actual Vercel frontend URL (you'll get this after deploying the frontend).
 
 ### Step 3: Build and Deploy to Cloud Run
 
@@ -72,7 +65,7 @@ musicalsite-main/
      --platform managed \
      --region us-central1 \
      --allow-unauthenticated \
-     --set-env-vars DATABASE_URL="your-database-url",ALLOWED_ORIGIN="https://your-frontend-url.vercel.app"
+     --set-env-vars ALLOWED_ORIGIN="https://your-frontend-url.vercel.app"
    ```
 
    Or deploy using a Docker image:
@@ -86,35 +79,12 @@ musicalsite-main/
      --platform managed \
      --region us-central1 \
      --allow-unauthenticated \
-     --set-env-vars DATABASE_URL="your-database-url",ALLOWED_ORIGIN="https://your-frontend-url.vercel.app"
+     --set-env-vars ALLOWED_ORIGIN="https://your-frontend-url.vercel.app"
    ```
 
    Replace `PROJECT_ID` with your Google Cloud project ID.
 
-### Step 4: Run Database Migrations
-
-After the backend is deployed, run migrations:
-
-1. Option 1: Run migrations locally (set DATABASE_URL in your `.env`):
-   ```bash
-   cd backend
-   npm install
-   npm run migrate
-   ```
-
-2. Option 2: Run migrations from Cloud Run container:
-   ```bash
-   gcloud run jobs create migrate-job \
-     --image gcr.io/PROJECT_ID/musical-site-backend \
-     --region us-central1 \
-     --set-env-vars DATABASE_URL="your-database-url" \
-     --command="node" \
-     --args="migrations/run_migrations.js"
-   
-   gcloud run jobs execute migrate-job --region us-central1
-   ```
-
-### Step 5: Note Your Backend URL
+### Step 3: Note Your Backend URL
 
 After deployment, Google Cloud Run will provide a URL like:
 ```
@@ -182,11 +152,9 @@ Click "Deploy" and wait for the build to complete.
 ## Post-Deployment Checklist
 
 - [ ] Backend is running and accessible at Cloud Run URL
-- [ ] Database migrations have been run
 - [ ] Frontend is deployed and accessible at Vercel URL
 - [ ] `VITE_API_URL` is set in Vercel environment variables
 - [ ] `ALLOWED_ORIGIN` is set in Cloud Run environment variables (with your Vercel URL)
-- [ ] Test user registration and login
 - [ ] Test API endpoints from frontend
 
 ## Updating CORS After Frontend Deployment
@@ -206,8 +174,6 @@ gcloud run services update musical-site-backend \
 ```bash
 cd backend
 npm install
-# Create .env file with DATABASE_URL
-npm run migrate  # Run migrations
 npm start        # Starts server on http://localhost:3000
 ```
 
@@ -226,7 +192,6 @@ The Vite dev server proxies `/api/*` requests to `http://localhost:3000` automat
 
 ### Backend Issues
 
-- **Database connection errors**: Verify `DATABASE_URL` is correct and the database is accessible
 - **CORS errors**: Ensure `ALLOWED_ORIGIN` includes your frontend URL (no trailing slash)
 - **Port errors**: Cloud Run sets `PORT` automatically, but ensure your code uses `process.env.PORT || 3000`
 
@@ -240,13 +205,11 @@ The Vite dev server proxies `/api/*` requests to `http://localhost:3000` automat
 
 - **Google Cloud Run**: Free tier includes 2 million requests/month
 - **Vercel**: Free tier includes 100GB bandwidth/month
-- **Database**: Depends on provider (Neon free tier, Supabase free tier, or Cloud SQL)
 
 ## Security Notes
 
 1. Never commit `.env` files to Git
 2. Use environment variables for all secrets
 3. Consider using Google Secret Manager for sensitive data
-4. Implement proper password hashing (currently passwords are stored in plain text - this should be fixed)
-5. Add authentication tokens (JWT) for API security
+4. Add authentication tokens (JWT) for API security
 
