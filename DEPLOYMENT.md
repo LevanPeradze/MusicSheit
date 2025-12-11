@@ -44,12 +44,17 @@ musicalsite-main/
 
 ### Step 2: Configure Environment Variables
 
-For Google Cloud Run, you'll need to set environment variables in the Cloud Run service:
+📖 **Detailed guide: See [GOOGLE_CLOUD_ENV_VARS.md](./GOOGLE_CLOUD_ENV_VARS.md)**
 
-- `PORT=3000` (optional, Cloud Run sets this automatically)
-- `ALLOWED_ORIGIN=https://your-frontend-url.vercel.app` (set this after deploying frontend)
+**Quick answer:** You can skip this step for now! 
 
-> **Note**: Replace `your-frontend-url.vercel.app` with your actual Vercel frontend URL (you'll get this after deploying the frontend).
+You'll set the `ALLOWED_ORIGIN` environment variable **after** you deploy your frontend to Vercel (because you need the Vercel URL first).
+
+**Two options:**
+1. **Set during deployment (Step 3)** - Include `--set-env-vars ALLOWED_ORIGIN="..."` in deploy command (if you have Vercel URL)
+2. **Set after deployment** - Use Google Cloud Console (see "Updating CORS After Frontend Deployment" section below)
+
+> **Note**: `PORT` is automatically set by Cloud Run - you don't need to configure it.
 
 ### Step 3: Build and Deploy to Cloud Run
 
@@ -148,13 +153,34 @@ Save this URL - you'll need it for the frontend deployment.
 
 ## Updating CORS After Frontend Deployment
 
-After you have your Vercel frontend URL, update the Cloud Run service:
+After you have your Vercel frontend URL, you need to update the `ALLOWED_ORIGIN` environment variable. Choose one method:
+
+### Method 1: Using Google Cloud Console (Easiest)
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Make sure you're in the correct project (top dropdown)
+3. Navigate to **Cloud Run** (search in top bar or find in left menu)
+4. Click on your service name: `musical-site-backend`
+5. Click **"EDIT & DEPLOY NEW REVISION"** (top bar)
+6. Scroll down to **"Variables & Secrets"** section
+7. Under **"Environment variables"**, you'll see existing variables
+   - If `ALLOWED_ORIGIN` exists: Click on it to edit the value
+   - If it doesn't exist: Click **"ADD VARIABLE"**
+8. Set:
+   - **Name**: `ALLOWED_ORIGIN`
+   - **Value**: `https://your-actual-vercel-url.vercel.app` (no trailing slash!)
+9. Click **"DEPLOY"** (bottom of page)
+10. Wait for deployment to complete (~30 seconds)
+
+### Method 2: Using Command Line
 
 ```bash
 gcloud run services update musical-site-backend \
   --region us-central1 \
   --update-env-vars ALLOWED_ORIGIN="https://your-actual-vercel-url.vercel.app"
 ```
+
+Replace `your-actual-vercel-url.vercel.app` with your real Vercel URL (e.g., `musical-site-frontend-abc123.vercel.app`)
 
 ## Local Development
 
