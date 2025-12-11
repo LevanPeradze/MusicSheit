@@ -95,57 +95,46 @@ Save this URL - you'll need it for the frontend deployment.
 
 ## Frontend Deployment (Vercel)
 
-### Step 1: Install Vercel CLI (Optional)
+📖 **For detailed step-by-step Vercel setup instructions, see [VERCEL_SETUP.md](./VERCEL_SETUP.md)**
 
-```bash
-npm i -g vercel
-```
+### Quick Setup Steps
 
-### Step 2: Deploy via Vercel Dashboard
+1. **Create Vercel Account**:
+   - Go to [vercel.com](https://vercel.com) and sign up (use GitHub for easiest setup)
 
-1. Go to [vercel.com](https://vercel.com) and sign in
-2. Click "Add New Project"
-3. Import your Git repository (GitHub, GitLab, or Bitbucket)
-4. Configure the project:
-   - **Root Directory**: Select `frontend`
-   - **Framework Preset**: Vite
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-   - **Install Command**: `npm install`
+2. **Import Repository**:
+   - Click "Add New Project"
+   - Select your repository: `LevanPeradze/MusicSheit`
+   - ⚠️ **Important**: Set **Root Directory** to `frontend`
+   - Framework should auto-detect as Vite
 
-### Step 3: Set Environment Variables
+3. **Deploy**:
+   - Click "Deploy" - Vercel will build and deploy automatically
+   - Save your Vercel URL (you'll need it for backend CORS)
 
-In the Vercel project settings, add environment variables:
-
-- **Variable**: `VITE_API_URL`
-- **Value**: `https://your-backend-url.run.app/api`
-
-Replace `your-backend-url.run.app` with your actual Google Cloud Run backend URL.
-
-### Step 4: Deploy
-
-Click "Deploy" and wait for the build to complete.
+4. **Set Environment Variables** (after backend is deployed):
+   - Go to Project Settings → Environment Variables
+   - Add: `VITE_API_URL` = `https://your-backend-url.run.app/api`
+   - Redeploy for changes to take effect
 
 ### Alternative: Deploy via CLI
 
-1. Navigate to the frontend directory:
+1. Install Vercel CLI:
    ```bash
-   cd frontend
+   npm i -g vercel
    ```
 
 2. Deploy:
    ```bash
+   cd frontend
+   vercel login
    vercel
    ```
 
-3. When prompted, set environment variables:
+3. Set environment variable:
    ```bash
    vercel env add VITE_API_URL production
    # Enter: https://your-backend-url.run.app/api
-   ```
-
-4. Redeploy to use the new environment variable:
-   ```bash
    vercel --prod
    ```
 

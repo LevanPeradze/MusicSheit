@@ -119,11 +119,8 @@ This project is designed to be deployed with:
    ```
 
 2. **Deploy Frontend to Vercel:**
-   - Import repository in Vercel dashboard
-   - Set root directory to `frontend`
-   - Add environment variable: `VITE_API_URL=https://your-backend-url.run.app/api`
-
-For complete step-by-step instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+   - 📖 See [VERCEL_SETUP.md](./VERCEL_SETUP.md) for complete step-by-step setup guide
+   - Or follow quick steps in [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ## Roadmap
 
