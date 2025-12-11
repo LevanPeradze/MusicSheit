@@ -23,6 +23,21 @@ app.use((req, res, next) => {
 // Middleware to parse JSON requests
 app.use(express.json());
 
+// Root route - simple health check
+app.get('/', (req, res) => {
+    res.json({ 
+        status: 'ok', 
+        message: 'Backend API is running',
+        endpoints: {
+            test: '/api/db/test',
+            interests: '/api/interests',
+            courses: '/api/courses',
+            register: '/api/register',
+            login: '/api/login'
+        }
+    });
+});
+
 // Register endpoint
 app.post('/api/register', async (req, res) => {
     try {
