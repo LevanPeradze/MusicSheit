@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { apiFetch } from '../lib/apiClient';
 
 function CoursesPage() {
   const [courses, setCourses] = useState([]);
@@ -22,7 +23,7 @@ function CoursesPage() {
         setLoading(true);
         // Include userId in query if user is logged in
         const url = user ? `/api/courses?userId=${user.id}` : '/api/courses';
-        const response = await fetch(url);
+        const response = await apiFetch(url);
         if (!response.ok) {
           throw new Error('Failed to fetch courses');
         }

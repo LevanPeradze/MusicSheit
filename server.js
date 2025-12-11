@@ -4,6 +4,22 @@ const pool = require('./server/config/database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const allowedOrigin = process.env.ALLOWED_ORIGIN;
+
+// Basic CORS for frontend hosting (Vercel)
+app.use((req, res, next) => {
+  if (allowedOrigin) {
+    res.header('Access-Control-Allow-Origin', allowedOrigin);
+  } else {
+    res.header('Access-Control-Allow-Origin', '*');
+  }
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 
 // Middleware to parse JSON requests
 app.use(express.json());

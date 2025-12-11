@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { apiFetch } from '../lib/apiClient';
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ function RegisterPage() {
     }
 
     try {
-      const response = await fetch('/api/register', {
+      const response = await apiFetch('/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { apiFetch } from '../lib/apiClient';
 
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState('interests');
@@ -43,7 +44,7 @@ function ProfilePage() {
 
   const fetchAllInterests = async () => {
     try {
-      const response = await fetch('/api/interests');
+      const response = await apiFetch('/api/interests');
       const data = await response.json();
       
       // Group by category
@@ -64,7 +65,7 @@ function ProfilePage() {
   const fetchUserInterests = async (userId) => {
     try {
       setInterestsLoading(true);
-      const response = await fetch(`/api/users/${userId}/interests`);
+      const response = await apiFetch(`/api/users/${userId}/interests`);
       const data = await response.json();
       setUserInterests(data.map(i => i.id));
     } catch (error) {
@@ -77,7 +78,7 @@ function ProfilePage() {
   const fetchUserProfile = async (userId) => {
     try {
       setProfileLoading(true);
-      const response = await fetch(`/api/users/${userId}/profile`);
+      const response = await apiFetch(`/api/users/${userId}/profile`);
       const data = await response.json();
       if (data.success && data.profile) {
         setProfile({
@@ -114,7 +115,7 @@ function ProfilePage() {
     setInterestError(false);
 
     try {
-      const response = await fetch(`/api/users/${user.id}/interests`, {
+      const response = await apiFetch(`/api/users/${user.id}/interests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -158,7 +159,7 @@ function ProfilePage() {
     setProfileError(false);
 
     try {
-      const response = await fetch(`/api/users/${user.id}/profile`, {
+      const response = await apiFetch(`/api/users/${user.id}/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

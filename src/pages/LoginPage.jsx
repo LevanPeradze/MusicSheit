@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { apiFetch } from '../lib/apiClient';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function LoginPage() {
     setError(false);
 
     try {
-      const response = await fetch('/api/login', {
+      const response = await apiFetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
