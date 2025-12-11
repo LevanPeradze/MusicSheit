@@ -147,7 +147,7 @@ Save this URL - you'll need it for the frontend deployment.
 
 - [ ] Backend is running and accessible at Cloud Run URL
 - [ ] Frontend is deployed and accessible at Vercel URL
-- [ ] `VITE_API_URL` is set in Vercel environment variables
+- [ ] `VITE_API_URL` is set in Vercel environment variables (without `/api` at the end!)
 - [ ] `ALLOWED_ORIGIN` is set in Cloud Run environment variables (with your Vercel URL)
 - [ ] Test API endpoints from frontend
 
