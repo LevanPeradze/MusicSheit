@@ -17,25 +17,72 @@ Full-stack web application for a modern music school. Students can register, set
 - **Database**: PostgreSQL (Neon) accessed via `pg`
 - **Tooling**: npm scripts, `dotenv`, custom migration runner
 
+## Project Structure
+
+```
+musicalsite/
+├── backend/           # Node.js/Express API
+│   ├── config/        # Database configuration
+│   ├── migrations/    # Database migrations
+│   ├── server.js      # Express server entry point
+│   └── package.json   # Backend dependencies
+├── frontend/          # React + Vite application
+│   ├── src/           # React source code
+│   ├── index.html     # HTML template
+│   ├── vite.config.js # Vite configuration
+│   └── package.json   # Frontend dependencies
+└── README.md
+```
+
 ## Getting Started
 
+### Prerequisites
+
+- Node.js 20+
+- PostgreSQL database (Neon, Supabase, or local)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
 ```bash
 git clone https://github.com/Dachi1234/musicalsite.git
 cd musicalsite
+```
+
+2. Install backend dependencies:
+```bash
+cd backend
+npm install
+```
+
+3. Install frontend dependencies:
+```bash
+cd ../frontend
 npm install
 ```
 
 ### Environment Variables
 
-Create `.env` (never commit it) based on `.env.example`:
-
+**Backend** (`backend/.env`):
 ```
 DATABASE_URL=postgresql://user:password@host/db?sslmode=require
+PORT=3000
+ALLOWED_ORIGIN=http://localhost:5173
 ```
+
+**Frontend** (`frontend/.env.local` - optional for local dev):
+```
+VITE_API_URL=http://localhost:3000/api
+```
+
+> Note: For local development, you don't need to set `VITE_API_URL` as Vite proxies `/api/*` to `http://localhost:3000` automatically.
 
 ### Database Migrations
 
+Run migrations from the backend directory:
 ```bash
+cd backend
 npm run migrate
 ```
 
@@ -43,8 +90,19 @@ This creates tables (`courses`, `users`, `interests`, `user_interests`, `course_
 
 ### Development Servers
 
-- **Backend**: `npm start` (http://localhost:3000)
-- **Frontend**: `npm run dev:frontend` (http://localhost:5173)
+**Terminal 1 - Backend:**
+```bash
+cd backend
+npm start
+```
+Backend runs on http://localhost:3000
+
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
+npm run dev
+```
+Frontend runs on http://localhost:5173
 
 Vite proxies `/api/*` calls to the Express server, so both should run simultaneously.
 
@@ -59,44 +117,28 @@ Vite proxies `/api/*` calls to the Express server, so both should run simultaneo
 | GET | `/api/courses?userId=:id` | Courses with `isForYou` + matching tags |
 | POST | `/api/courses/:id/interests` | Attach interests to a course |
 
-## Project Structure
+## Deployment
 
-```
-.
-├── server/
-│   ├── config/           # database connection
-│   ├── data/             # legacy local data (unused now)
-│   └── migrations/       # SQL + runner script
-├── src/
-│   ├── pages/            # React pages (Login, Register, Main, Courses, Profile)
-│   ├── App.jsx
-│   └── index.css
-├── README.md
-├── package.json
-└── vite.config.js
-```
+This project is designed to be deployed with:
+- **Backend**: Google Cloud Run (or any Node.js hosting)
+- **Frontend**: Vercel (or any static hosting)
 
-## Deployment Checklist
+📖 **See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.**
 
-- Add production `DATABASE_URL` as an environment secret (e.g., GitHub Actions, hosting provider)
-- Run `npm run build` for frontend (if deploying as static assets)
-- Optional: configure CI/CD (GitHub Actions) for lint/test/migrations
+### Quick Deployment Summary
 
-## GitHub Pages Deployment
+1. **Deploy Backend to Google Cloud Run:**
+   ```bash
+   cd backend
+   gcloud run deploy musical-site-backend --source . --platform managed --region us-central1
+   ```
 
-This repo ships with `.github/workflows/deploy.yml`, which:
+2. **Deploy Frontend to Vercel:**
+   - Import repository in Vercel dashboard
+   - Set root directory to `frontend`
+   - Add environment variable: `VITE_API_URL=https://your-backend-url.run.app/api`
 
-1. Builds the Vite frontend on every push to `main`
-2. Uploads the `dist/` artifact
-3. Publishes it to **GitHub Pages** (project site)
-
-After the first successful run, GitHub will host the static frontend at:
-
-```
-https://dachi1234.github.io/musicalsite/
-```
-
-> ⚠️ The backend API does not run on GitHub Pages. To exercise login/profile features in production, deploy the Express server separately (Render, Railway, Fly.io, etc.) and update the frontend API base URL.
+For complete step-by-step instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ## Roadmap
 

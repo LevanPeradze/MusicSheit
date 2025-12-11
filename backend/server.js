@@ -1,6 +1,5 @@
 const express = require('express');
-const path = require('path');
-const pool = require('./server/config/database');
+const pool = require('./config/database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,14 +22,6 @@ app.use((req, res, next) => {
 
 // Middleware to parse JSON requests
 app.use(express.json());
-
-// Serve static files from the current directory
-app.use(express.static(__dirname));
-
-// Serve index.html for the root route
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
 
 // Register endpoint
 app.post('/api/register', async (req, res) => {
